@@ -13,6 +13,9 @@ export class GPU {
 
     private buffers:any = []
 
+    private pipeline?:GPUComputePipeline
+    private bindGroup?:GPUBindGroup 
+
     constructor(device: GPUDevice, shaderFile:string) {
         this.device = device
 
@@ -23,38 +26,29 @@ export class GPU {
     }
 
     setData(){
-        /*const configDataSet:any = []
-        this.buffers.map((buffer:any,i:number)=>{
-            configDataSet.push({
-                binding: i,
-                type: buffer.type,
-                buffer: buffer.buffer,
-                usage: buffer.usage,
-            })
-        })
-        this.configDataSet = configDataSet*/
+        if(!this.bindGroupLayout){
+            const entries: GPUBindGroupLayoutEntry[] = []
+            const resource: GPUBindGroupEntry[] = []
 
-        const entries: GPUBindGroupLayoutEntry[] = []
-        const resource: GPUBindGroupEntry[] = []
+            this.buffers.map((buffer:any,i:number)=>{
+                entries.push({
+                    binding: i,
+                    visibility: GPUShaderStage.COMPUTE,
+                    buffer: { type: buffer.type },
+                })
 
-        this.buffers.map((buffer:any,i:number)=>{
-            entries.push({
-                binding: i,
-                visibility: GPUShaderStage.COMPUTE,
-                buffer: { type: buffer.type },
+                resource.push({
+                    binding: i,
+                    resource: { buffer:buffer.buffer },
+                })
             })
 
-            resource.push({
-                binding: i,
-                resource: { buffer:buffer.buffer },
+            this.bindGroupLayout = this.device.createBindGroupLayout({
+                entries,
             })
-        })
 
-        this.bindGroupLayout = this.device.createBindGroupLayout({
-            entries,
-        })
-
-        this.uniforms = resource
+            this.uniforms = resource
+        }
     }
 
     createBuffer(type: string, size: number, usage: GPUBufferUsageFlags) {
@@ -75,8 +69,8 @@ export class GPU {
         this.device.queue.writeBuffer(buffer, 0, data)
     }
 
-    runShader(workgroups: { workgroupsX: number, workgroupsY: number, workgroupsZ: number }) {
-        const pipeline = this.device.createComputePipeline({
+    createPipeline(){
+        this.pipeline = this.device.createComputePipeline({
             layout: this.bindGroupLayout
                 ? this.device.createPipelineLayout({
                     bindGroupLayouts: [this.bindGroupLayout],
@@ -84,17 +78,22 @@ export class GPU {
                 : "auto",
             compute: { module: this.shaderModule, entryPoint: "main" },
         })
-
-        const bindGroup = this.device.createBindGroup({
-            layout: this.bindGroupLayout ?? pipeline.getBindGroupLayout(0),
+        this.bindGroup = this.device.createBindGroup({
+            layout: this.bindGroupLayout ?? this.pipeline.getBindGroupLayout(0),
             entries: this.uniforms!,
         })
+    }
+
+    runShader(workgroups: { workgroupsX: number, workgroupsY: number, workgroupsZ: number }) {
+        if(!this.pipeline){
+            this.createPipeline()
+        }
 
         const encoder = this.device.createCommandEncoder()
         const pass = encoder.beginComputePass()
 
-        pass.setPipeline(pipeline)
-        pass.setBindGroup(0, bindGroup)
+        pass.setPipeline(this.pipeline!)
+        pass.setBindGroup(0, this.bindGroup)
 
         pass.dispatchWorkgroups(
             workgroups.workgroupsX,
