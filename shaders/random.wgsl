@@ -8,7 +8,7 @@ struct Config {
 @group(0) @binding(1) var<uniform> config: Config;
 @group(0) @binding(2) var<uniform> token: array<f32, 128>;
 
-@compute @workgroup_size(8, 8, 4) // 8*8*4 = 256
+@compute @workgroup_size(256, 1, 1) // 8*8*4 = 256
 fn main(@builtin(global_invocation_id) id: vec3<u32>) {
     let x = id.x;
     let y = id.y;

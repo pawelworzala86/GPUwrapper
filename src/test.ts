@@ -28,9 +28,9 @@ const input = new Float32Array(VECTORS * ROWS * COLS).fill(0.0);
 const configData = new Uint32Array([COLS, ROWS, VECTORS]);
 const tokenData = new Float32Array(128).fill(0.5)
 
-const wgSizeX = 8;
-const wgSizeY = 8;
-const wgSizeZ = 4;
+const wgSizeX = 256;
+const wgSizeY = 1;
+const wgSizeZ = 1;
 
 const workgroups = {
   x: Math.ceil(COLS / wgSizeX),
@@ -80,4 +80,5 @@ end = getTimestamp()
 randomResult = await gpu.getData(inputBuffer, VECTORS * ROWS * COLS)
 
 console.log(randomResult.slice(0, 16));
+//console.log(randomResult.slice(16, 32));
 console.log('time: ', end-time);
