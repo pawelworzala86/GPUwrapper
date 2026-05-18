@@ -86,26 +86,29 @@ export class GPU {
         })
     }
 
-    runShader(workgroups: { x:number,y:number,z:number }) {
+    begin(){
         this.setData()
         if(!this.pipeline){
             this.createPipeline()
         }
 
-        const encoder = this.device.createCommandEncoder()
-        const pass = encoder.beginComputePass()
+        this.encoder = this.device.createCommandEncoder()
+        this.pass = this.encoder.beginComputePass()
+    }
 
-        pass.setPipeline(this.pipeline!)
-        pass.setBindGroup(0, this.bindGroup)
+    end(){
+        this.pass.end()
+        this.device.queue.submit([this.encoder.finish()])
+    }
 
-        pass.dispatchWorkgroups(
+    runShader(workgroups: { x:number,y:number,z:number }) {
+        this.pass.setPipeline(this.pipeline!)
+        this.pass.setBindGroup(0, this.bindGroup)
+        this.pass.dispatchWorkgroups(
             workgroups.x,
             workgroups.y,
             workgroups.z,
         )
-
-        pass.end()
-        this.device.queue.submit([encoder.finish()])
     }
 
     async getData(buffer:GPUBuffer, length:number) {

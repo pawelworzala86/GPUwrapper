@@ -58,7 +58,9 @@ gpu.writeBuffer(inputBuffer, input)
 gpu.writeBuffer(tokenDataBuffer, tokenData)
 gpu.writeBuffer(configDataBuffer, configData)
 
+gpu.begin()
 gpu.runShader(workgroups)
+gpu.end()
 
 let randomResult = await gpu.getData(inputBuffer, VECTORS * ROWS * COLS)
 
@@ -70,11 +72,15 @@ console.log('time: ', end-time);
 
 time = getTimestamp()
 
-//gpu.writeBuffer(inputBuffer, input)
-gpu.writeBuffer(tokenDataBuffer, tokenData)
-gpu.writeBuffer(configDataBuffer, configData)
+gpu.begin()
+for(let i=0;i<200;i++){
+  //gpu.writeBuffer(inputBuffer, input)
+  gpu.writeBuffer(tokenDataBuffer, tokenData)
+  gpu.writeBuffer(configDataBuffer, configData)
 
-gpu.runShader(workgroups)
+  gpu.runShader(workgroups)
+}
+gpu.end()
 
 end = getTimestamp()
 
