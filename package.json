@@ -1,0 +1,28 @@
+{
+  "name": "webgpu",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "npx ts-node ./src/test.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pawelworzala86/webGPU.git"
+  },
+  "keywords": [],
+  "author": "Paweł Worzała",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/pawelworzala86/webGPU/issues"
+  },
+  "homepage": "https://github.com/pawelworzala86/webGPU#readme",
+  "dependencies": {
+    "webgpu": "^0.3.10"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "ts-node": "^10.0.0",
+    "typescript": "^5.0.0"
+  }
+}
