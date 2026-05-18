@@ -42,25 +42,34 @@ function getTimestamp(){
 
 
 
-let time = getTimestamp()
 
 const inputBuffer = gpu.createBuffer('storage', VECTORS * ROWS * COLS, GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_SRC | GPUBufferUsage.COPY_DST)
 const configDataBuffer = gpu.createBuffer('uniform', 3, GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST)
 
+
+
+
+let time = getTimestamp()
+
 gpu.writeBuffer(inputBuffer, input)
 gpu.writeBuffer(configDataBuffer, configData)
 
-gpu.setData()
+gpu.runShader({ workgroupsX, workgroupsY, workgroupsZ })
 
-gpu.runShader({ workgroupsX, workgroupsY, workgroupsZ });
-
-const randomResult = await gpu.getData(inputBuffer, VECTORS * ROWS * COLS);
-
-
+let randomResult = await gpu.getData(inputBuffer, VECTORS * ROWS * COLS)
 
 let end = getTimestamp()
+console.log(randomResult.slice(0, 16));
+console.log('time: ', end-time);
 
 
 
+time = getTimestamp()
+
+gpu.runShader({ workgroupsX, workgroupsY, workgroupsZ })
+
+randomResult = await gpu.getData(inputBuffer, VECTORS * ROWS * COLS)
+
+end = getTimestamp()
 console.log(randomResult.slice(0, 16));
 console.log('time: ', end-time);

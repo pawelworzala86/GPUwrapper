@@ -85,6 +85,7 @@ export class GPU {
     }
 
     runShader(workgroups: { workgroupsX: number, workgroupsY: number, workgroupsZ: number }) {
+        this.setData()
         if(!this.pipeline){
             this.createPipeline()
         }

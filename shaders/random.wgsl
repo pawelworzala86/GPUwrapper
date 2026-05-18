@@ -21,5 +21,5 @@ fn main(@builtin(global_invocation_id) id: vec3<u32>) {
               + y * config.width
               + x;
 
-    data[index] = f32(index); // albo random(x,y,z)
+    data[index] = data[index] + f32(index); // albo random(x,y,z)
 }
