@@ -84,7 +84,7 @@ export class GPU {
         })
     }
 
-    runShader(workgroups: { workgroupsX: number, workgroupsY: number, workgroupsZ: number }) {
+    runShader(workgroups: { x:number,y:number,z:number }) {
         this.setData()
         if(!this.pipeline){
             this.createPipeline()
@@ -97,9 +97,9 @@ export class GPU {
         pass.setBindGroup(0, this.bindGroup)
 
         pass.dispatchWorkgroups(
-            workgroups.workgroupsX,
-            workgroups.workgroupsY,
-            workgroups.workgroupsZ,
+            workgroups.x,
+            workgroups.y,
+            workgroups.z,
         )
 
         pass.end()

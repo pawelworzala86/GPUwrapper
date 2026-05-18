@@ -31,9 +31,11 @@ const wgSizeX = 8;
 const wgSizeY = 8;
 const wgSizeZ = 4;
 
-const workgroupsX = Math.ceil(COLS / wgSizeX);
-const workgroupsY = Math.ceil(ROWS / wgSizeY);
-const workgroupsZ = Math.ceil(VECTORS / wgSizeZ);
+const workgroups = {
+  x: Math.ceil(COLS / wgSizeX),
+  y: Math.ceil(ROWS / wgSizeY),
+  z: Math.ceil(VECTORS / wgSizeZ),
+}
 
 function getTimestamp(){
     return new Date().getTime()
@@ -54,7 +56,7 @@ let time = getTimestamp()
 gpu.writeBuffer(inputBuffer, input)
 gpu.writeBuffer(configDataBuffer, configData)
 
-gpu.runShader({ workgroupsX, workgroupsY, workgroupsZ })
+gpu.runShader(workgroups)
 
 let randomResult = await gpu.getData(inputBuffer, VECTORS * ROWS * COLS)
 
@@ -69,7 +71,7 @@ time = getTimestamp()
 //gpu.writeBuffer(inputBuffer, input)
 //gpu.writeBuffer(configDataBuffer, configData)
 
-gpu.runShader({ workgroupsX, workgroupsY, workgroupsZ })
+gpu.runShader(workgroups)
 
 end = getTimestamp()
 
