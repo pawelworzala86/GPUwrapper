@@ -1,22 +1,22 @@
 {
-  "name": "webgpu",
+  "name": "gpuwrapper",
   "version": "1.0.0",
   "description": "",
-  "main": "app.js",
+  "main": "index.js",
   "scripts": {
-    "test": "npx ts-node ./src/test.ts"
+    "test": "npx ts-node src/test.ts"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/pawelworzala86/webGPU.git"
+    "url": "git+https://github.com/pawelworzala86/GPUwrapper.git"
   },
   "keywords": [],
   "author": "Paweł Worzała",
   "type": "module",
   "bugs": {
-    "url": "https://github.com/pawelworzala86/webGPU/issues"
+    "url": "https://github.com/pawelworzala86/GPUwrapper/issues"
   },
-  "homepage": "https://github.com/pawelworzala86/webGPU#readme",
+  "homepage": "https://github.com/pawelworzala86/GPUwrapper#readme",
   "dependencies": {
     "webgpu": "^0.3.10"
   },
