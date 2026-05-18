@@ -1,5 +1,5 @@
 import { create, globals } from 'webgpu'
-import GPU from './gpu.ts'
+import { GPU, setDevice } from './gpu.ts'
 
 Object.assign(globalThis, globals)
 const navigator = { gpu: create([]) }
@@ -12,10 +12,10 @@ const device = await adapter!.requestDevice({
   }
 })
 
+setDevice(device)
 
 
-
-const gpu = new GPU(device,'random.wgsl')
+const gpu = new GPU('random.wgsl')
 
 
 

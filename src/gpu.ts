@@ -1,5 +1,7 @@
 import fs from 'fs'
 
+let device:GPUDevice
+
 const shaderCodes:any = {}
 
 export class GPU {
@@ -16,7 +18,7 @@ export class GPU {
     private pipeline?:GPUComputePipeline
     private bindGroup?:GPUBindGroup 
 
-    constructor(device: GPUDevice, shaderFile:string) {
+    constructor(shaderFile:string) {
         this.device = device
 
         if(shaderCodes[shaderFile]==undefined){
@@ -131,3 +133,7 @@ export class GPU {
 }
 
 export default GPU
+
+export function setDevice(_device:GPUDevice){
+    device = _device
+}
