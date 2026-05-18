@@ -66,10 +66,14 @@ console.log('time: ', end-time);
 
 time = getTimestamp()
 
+//gpu.writeBuffer(inputBuffer, input)
+//gpu.writeBuffer(configDataBuffer, configData)
+
 gpu.runShader({ workgroupsX, workgroupsY, workgroupsZ })
+
+end = getTimestamp()
 
 randomResult = await gpu.getData(inputBuffer, VECTORS * ROWS * COLS)
 
-end = getTimestamp()
 console.log(randomResult.slice(0, 16));
 console.log('time: ', end-time);
