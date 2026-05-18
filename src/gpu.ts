@@ -7,9 +7,11 @@ export class GPU {
 
     private bindGroupLayout?: GPUBindGroupLayout
     private uniforms?: GPUBindGroupEntry[]
-    private configDataSet: any[] = []
+    //private configDataSet: any[] = []
 
     private shaderModule:GPUShaderModule
+
+    private buffers:any = []
 
     constructor(device: GPUDevice, shaderFile:string) {
         this.device = device
@@ -20,32 +22,32 @@ export class GPU {
         this.shaderModule = this.device.createShaderModule({ code: shaderCodes[shaderFile] })
     }
 
-    setData(configDataSet: any[]) {
-        this.configDataSet = configDataSet
+    setData(){
+        /*const configDataSet:any = []
+        this.buffers.map((buffer:any,i:number)=>{
+            configDataSet.push({
+                binding: i,
+                type: buffer.type,
+                buffer: buffer.buffer,
+                usage: buffer.usage,
+            })
+        })
+        this.configDataSet = configDataSet*/
 
         const entries: GPUBindGroupLayoutEntry[] = []
         const resource: GPUBindGroupEntry[] = []
 
-        configDataSet.map((config: any) => {
-            // config.type MUSI być jednym z:
-            // "storage" | "read-only-storage" | "uniform"
+        this.buffers.map((buffer:any,i:number)=>{
             entries.push({
-                binding: config.binding,
+                binding: i,
                 visibility: GPUShaderStage.COMPUTE,
-                buffer: { type: config.type },
+                buffer: { type: buffer.type },
             })
-
-            const buffer = this.createBuffer(
-                config.input,
-                config.usage,
-            )
 
             resource.push({
-                binding: config.binding,
-                resource: { buffer },
+                binding: i,
+                resource: { buffer:buffer.buffer },
             })
-
-            config.buffer = buffer
         })
 
         this.bindGroupLayout = this.device.createBindGroupLayout({
@@ -55,14 +57,22 @@ export class GPU {
         this.uniforms = resource
     }
 
-    createBuffer(data: ArrayBufferView, usage: GPUBufferUsageFlags) {
+    createBuffer(type: string, size: number, usage: GPUBufferUsageFlags) {
         // ZAWSZE dodajemy COPY_DST, bo używamy writeBuffer
         const buffer = this.device.createBuffer({
-            size: data.byteLength,
-            usage: usage | GPUBufferUsage.COPY_DST,
+            size: size*4,
+            usage,
         })
-        this.device.queue.writeBuffer(buffer, 0, data)
+        this.buffers.push({
+            type,
+            buffer,
+            usage,
+        })
         return buffer
+    }
+
+    writeBuffer(buffer:GPUBuffer,data:GPUAllowSharedBufferSource){
+        this.device.queue.writeBuffer(buffer, 0, data)
     }
 
     runShader(workgroups: { workgroupsX: number, workgroupsY: number, workgroupsZ: number }) {
@@ -96,10 +106,11 @@ export class GPU {
         this.device.queue.submit([encoder.finish()])
     }
 
-    async getData(binding: number) {
-        const cfg = this.configDataSet.find((c: any) => c.binding === binding)
-        const buffer: GPUBuffer = cfg.buffer
-        const byteLength: number = cfg.input.byteLength
+    async getData(buffer:GPUBuffer, length:number) {
+        //const cfg = this.buffers[binding]
+
+        //const buffer: GPUBuffer = cfg.buffer
+        const byteLength = length * 4// = cfg.input.byteLength
 
         const readBuffer = this.device.createBuffer({
             size: byteLength,
