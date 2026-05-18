@@ -70,6 +70,7 @@ console.log('time: ', end-time);
 
 time = getTimestamp()
 
+//gpu.writeBuffer(inputBuffer, input)
 gpu.writeBuffer(tokenDataBuffer, tokenData)
 gpu.writeBuffer(configDataBuffer, configData)
 
