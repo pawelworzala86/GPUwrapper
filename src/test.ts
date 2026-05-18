@@ -26,6 +26,7 @@ const COLS = 1024;
 
 const input = new Float32Array(VECTORS * ROWS * COLS).fill(0.0);
 const configData = new Uint32Array([COLS, ROWS, VECTORS]);
+const tokenData = new Float32Array(128).fill(0.5)
 
 const wgSizeX = 8;
 const wgSizeY = 8;
@@ -47,13 +48,14 @@ function getTimestamp(){
 
 const inputBuffer = gpu.createBuffer('storage', VECTORS * ROWS * COLS, GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_SRC | GPUBufferUsage.COPY_DST)
 const configDataBuffer = gpu.createBuffer('uniform', 3, GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST)
-
+const tokenDataBuffer = gpu.createBuffer('uniform', 128, GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST)
 
 
 
 let time = getTimestamp()
 
 gpu.writeBuffer(inputBuffer, input)
+gpu.writeBuffer(tokenDataBuffer, tokenData)
 gpu.writeBuffer(configDataBuffer, configData)
 
 gpu.runShader(workgroups)
@@ -68,8 +70,8 @@ console.log('time: ', end-time);
 
 time = getTimestamp()
 
-//gpu.writeBuffer(inputBuffer, input)
-//gpu.writeBuffer(configDataBuffer, configData)
+gpu.writeBuffer(tokenDataBuffer, tokenData)
+gpu.writeBuffer(configDataBuffer, configData)
 
 gpu.runShader(workgroups)
 
