@@ -1,3 +1,7 @@
+import fs from 'fs'
+
+const shaderCodes:any = {}
+
 export class GPU {
     private device: GPUDevice
 
@@ -5,8 +9,15 @@ export class GPU {
     private uniforms?: GPUBindGroupEntry[]
     private configDataSet: any[] = []
 
-    constructor(device: GPUDevice) {
+    private shaderModule:GPUShaderModule
+
+    constructor(device: GPUDevice, shaderFile:string) {
         this.device = device
+
+        if(shaderCodes[shaderFile]==undefined){
+            shaderCodes[shaderFile] = fs.readFileSync('./shaders/'+shaderFile).toString()
+        }
+        this.shaderModule = this.device.createShaderModule({ code: shaderCodes[shaderFile] })
     }
 
     setData(configDataSet: any[]) {
@@ -54,16 +65,14 @@ export class GPU {
         return buffer
     }
 
-    runShader(wgslCode: string, workgroups: { workgroupsX: number, workgroupsY: number, workgroupsZ: number }) {
-        const shaderModule = this.device.createShaderModule({ code: wgslCode })
-
+    runShader(workgroups: { workgroupsX: number, workgroupsY: number, workgroupsZ: number }) {
         const pipeline = this.device.createComputePipeline({
             layout: this.bindGroupLayout
                 ? this.device.createPipelineLayout({
                     bindGroupLayouts: [this.bindGroupLayout],
                 })
                 : "auto",
-            compute: { module: shaderModule, entryPoint: "main" },
+            compute: { module: this.shaderModule, entryPoint: "main" },
         })
 
         const bindGroup = this.device.createBindGroup({

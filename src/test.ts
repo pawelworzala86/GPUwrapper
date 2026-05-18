@@ -1,4 +1,3 @@
-import fs from 'fs'
 import { create, globals } from 'webgpu'
 import GPU from './gpu.ts'
 
@@ -13,11 +12,12 @@ const device = await adapter!.requestDevice({
   }
 })
 
-const gpu = new GPU(device)
 
 
 
-const wgslCodeRandom = fs.readFileSync('./shaders/random.wgsl').toString()
+const gpu = new GPU(device,'random.wgsl')
+
+
 
 
 const VECTORS = 16;
@@ -56,7 +56,7 @@ gpu.setData([
   },
 ]);
 
-gpu.runShader(wgslCodeRandom, { workgroupsX, workgroupsY, workgroupsZ });
+gpu.runShader({ workgroupsX, workgroupsY, workgroupsZ });
 
 const randomResult = await gpu.getData(0);
 
