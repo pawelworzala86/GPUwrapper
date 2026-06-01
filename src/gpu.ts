@@ -56,16 +56,17 @@ export class GPU {
         }
     }
 
-    createBuffer(binding: number, type: string, size: number, usage: GPUBufferUsageFlags,bufferOrigin:any|null=null) {
+    createBuffer(dataset:any){
+        //binding: number, type: string, size: number, usage: GPUBufferUsageFlags,bufferOrigin:any|null=null) {
         // ZAWSZE dodajemy COPY_DST, bo używamy writeBuffer
-        const buffer = bufferOrigin??this.device.createBuffer({
-            size: size*4,
-            usage,
+        const buffer = dataset.bufferOrigin??this.device.createBuffer({
+            size: dataset.size*4,
+            usage: dataset.usage,
         })
-        this.buffers[binding] = {
-            type,
+        this.buffers[dataset.binding] = {
+            type: dataset.type,
             buffer,
-            usage,
+            usage: dataset.usage,
         }
         return buffer
     }
