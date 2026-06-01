@@ -53,9 +53,9 @@ export class GPU {
         }
     }
 
-    createBuffer(type: string, size: number, usage: GPUBufferUsageFlags) {
+    createBuffer(type: string, size: number, usage: GPUBufferUsageFlags,bufferOrigin:any|null=null) {
         // ZAWSZE dodajemy COPY_DST, bo używamy writeBuffer
-        const buffer = this.device.createBuffer({
+        const buffer = bufferOrigin??this.device.createBuffer({
             size: size*4,
             usage,
         })

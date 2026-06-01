@@ -89,3 +89,41 @@ randomResult = await gpu.getData(inputBuffer, VECTORS * ROWS * COLS)
 console.log(randomResult.slice(0, 16));
 //console.log(randomResult.slice(16, 32));
 console.log('time: ', end-time);
+
+
+
+
+
+
+
+
+
+
+
+const gpu2 = new GPU('test.wgsl')
+
+
+
+
+
+const inputBuffer2 = gpu2.createBuffer('storage', VECTORS * ROWS * COLS, GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_SRC | GPUBufferUsage.COPY_DST, inputBuffer)
+const configDataBuffer2 = gpu2.createBuffer('uniform', 3, GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST)
+const tokenDataBuffer2 = gpu2.createBuffer('uniform', 128, GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST)
+
+
+
+time = getTimestamp()
+
+//gpu2.writeBuffer(inputBuffer2, input)
+gpu2.writeBuffer(tokenDataBuffer2, tokenData)
+gpu2.writeBuffer(configDataBuffer2, configData)
+
+gpu2.begin()
+gpu2.runShader(workgroups)
+gpu2.end()
+
+let randomResult2 = await gpu2.getData(inputBuffer2, VECTORS * ROWS * COLS)
+
+end = getTimestamp()
+console.log(randomResult2.slice(0, 16));
+console.log('time: ', end-time);
