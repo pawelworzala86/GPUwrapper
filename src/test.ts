@@ -24,19 +24,28 @@ const VECTORS = 16;
 const ROWS = 1024;
 const COLS = 1024;
 
+const TOKENS = 128
+
 const input = new Float32Array(VECTORS * ROWS * COLS).fill(0.0);
 const configData = new Uint32Array([COLS, ROWS, VECTORS]);
-const tokenData = new Float32Array(128).fill(0.5)
+const tokenData = new Float32Array(TOKENS).fill(0.5)
 
 const wgSizeX = 256;
 const wgSizeY = 1;
 const wgSizeZ = 1;
 
 const workgroups = {
+  x: Math.ceil(TOKENS / wgSizeX),
+  y: 1,
+  z: 1,
+}
+/*
+const workgroups = {
   x: Math.ceil(COLS / wgSizeX),
   y: Math.ceil(ROWS / wgSizeY),
   z: Math.ceil(VECTORS / wgSizeZ),
 }
+*/
 
 function getTimestamp(){
     return new Date().getTime()
