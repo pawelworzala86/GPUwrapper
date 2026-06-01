@@ -20,7 +20,7 @@ const gpu = new GPU('random.wgsl')
 
 
 
-const VECTORS = 16;
+const VECTORS = 128;
 const ROWS = 1024;
 const COLS = 1024;
 
