@@ -18,6 +18,9 @@ export class GPU {
     private pipeline?:GPUComputePipeline
     private bindGroup?:GPUBindGroup 
 
+    private encoder!:GPUCommandEncoder
+    private pass!:GPUComputePassEncoder
+
     constructor(shaderFile:string) {
         this.device = device
 
@@ -53,17 +56,17 @@ export class GPU {
         }
     }
 
-    createBuffer(type: string, size: number, usage: GPUBufferUsageFlags,bufferOrigin:any|null=null) {
+    createBuffer(binding: number, type: string, size: number, usage: GPUBufferUsageFlags,bufferOrigin:any|null=null) {
         // ZAWSZE dodajemy COPY_DST, bo używamy writeBuffer
         const buffer = bufferOrigin??this.device.createBuffer({
             size: size*4,
             usage,
         })
-        this.buffers.push({
+        this.buffers[binding] = {
             type,
             buffer,
             usage,
-        })
+        }
         return buffer
     }
 

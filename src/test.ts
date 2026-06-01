@@ -46,9 +46,9 @@ function getTimestamp(){
 
 
 
-const inputBuffer = gpu.createBuffer('storage', VECTORS * ROWS * COLS, GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_SRC | GPUBufferUsage.COPY_DST)
-const configDataBuffer = gpu.createBuffer('uniform', 3, GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST)
-const tokenDataBuffer = gpu.createBuffer('uniform', 128, GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST)
+const inputBuffer = gpu.createBuffer(0,'storage', VECTORS * ROWS * COLS, GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_SRC | GPUBufferUsage.COPY_DST)
+const configDataBuffer = gpu.createBuffer(1,'uniform', 3, GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST)
+const tokenDataBuffer = gpu.createBuffer(2,'uniform', 128, GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST)
 
 
 
@@ -106,9 +106,9 @@ const gpu2 = new GPU('test.wgsl')
 
 
 
-const inputBuffer2 = gpu2.createBuffer('storage', VECTORS * ROWS * COLS, GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_SRC | GPUBufferUsage.COPY_DST, inputBuffer)
-const configDataBuffer2 = gpu2.createBuffer('uniform', 3, GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST)
-const tokenDataBuffer2 = gpu2.createBuffer('uniform', 128, GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST)
+const inputBuffer2 = gpu2.createBuffer(0,'storage', VECTORS * ROWS * COLS, GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_SRC | GPUBufferUsage.COPY_DST, inputBuffer)
+const configDataBuffer2 = gpu2.createBuffer(1,'uniform', 3, GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST)
+const tokenDataBuffer2 = gpu2.createBuffer(2,'uniform', 128, GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST)
 
 
 
