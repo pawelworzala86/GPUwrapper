@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "npx ts-node src/test.ts"
+    "test": "npx ts-node src/test.ts",
+    "matmul": "npx ts-node src/matmul.ts"
   },
   "repository": {
     "type": "git",
