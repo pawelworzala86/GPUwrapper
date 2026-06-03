@@ -19,8 +19,8 @@ const gpu = await GPU.create('random.wgsl')
 
 
 const VECTORS = 128;
-const ROWS = 1024;
-const COLS = 1024;
+const ROWS = 128;
+const COLS = 128;
 
 const TOKENS = 128
 
