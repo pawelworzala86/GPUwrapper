@@ -1,19 +1,18 @@
-import { create, globals } from 'webgpu';
-import { GPU, setDevice } from './gpu.ts';
-
-Object.assign(globalThis, globals);
-
-const navigator = { gpu: create([]) };
+import { GPU, setDevice } from './gpu.ts'
 
 const adapter = await navigator.gpu.requestAdapter();
+if (!adapter) throw new Error("No GPU adapter");
+
 const device = await adapter!.requestDevice({
   requiredLimits: {
     maxStorageBufferBindingSize: adapter!.limits.maxStorageBufferBindingSize,
     maxBufferSize: adapter!.limits.maxBufferSize,
-  },
-});
+  }
+})
 
-setDevice(device);
+setDevice(device)
+
+
 
 // ----- rozmiary macierzy -----
 const M = 128; // rows A, C
@@ -32,7 +31,7 @@ for (let i = 0; i < B.length; i++) B[i] = Math.random();
 const dimsData = new Uint32Array([M, N, K]);
 
 // ----- GPU setup -----
-const gpu = new GPU('matmul.wgsl');
+const gpu = await GPU.create('matmul.wgsl');
 
 console.log('shader loaded');
 
