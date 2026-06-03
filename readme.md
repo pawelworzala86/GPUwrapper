@@ -1,3 +1,3 @@
-#GPU wrapper
+# GPU wrapper
 \
-npm run test\
+npm run test
